@@ -10,4 +10,9 @@ class testController extends Controller
     return "thids is hello fun";
    }
 
+   public function hello2(){
+    return "thids is hello fun number 2";
+   }
+
+
 }
