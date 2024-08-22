@@ -1,0 +1,4 @@
+1.usecase diagram
+2.المتطلبات الوظيفية وغير الوظيفية
+3.laravel JWT
+4.email verify
