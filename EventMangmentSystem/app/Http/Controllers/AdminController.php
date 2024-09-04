@@ -37,7 +37,7 @@ if($admin)
     else
     {
         return  response()->json([
-            'code'=>'404',
+            'code'=>'error',
         ]);
     }
 }
