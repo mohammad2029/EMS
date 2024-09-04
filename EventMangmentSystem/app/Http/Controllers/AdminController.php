@@ -2,14 +2,69 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AdminRegisterRequest;
+use App\Http\Requests\LoginAdminRequest;
 use App\Models\Admin;
 use Illuminate\Http\Request;
+use App\Traits\HttpResponsesTrait;
+use Exception;
+use Illuminate\Support\Facades\Auth ;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class AdminController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    use HttpResponsesTrait;
+
+public function admin_login(LoginAdminRequest $request){
+$request->validated($request->all());
+$admin=Admin::where('email',$request->email)->first();
+if($admin)
+{
+    if(Hash::check($request->password,$admin->password))
+    {
+        $token=Auth::guard('admin') ->attempt(['email'=>$request->email,'password'=>$request->password]);
+        return  response()->json([
+            'token'=>$token,
+            'code'=>'200',
+            'email'=>$request->email,
+            'pass'=>$admin->password,
+            'password_check'=>Hash::check($request->password,$admin->password)
+        ]);
+
+    }
+
+    else
+    {
+        return  response()->json([
+            'code'=>'403',
+        ]);
+    }
+}
+
+// return $user;
+// return auth('admin')->attempt([]);
+// return $password;
+
+}
+public function admin_register(AdminRegisterRequest $request){
+
+    $admin=Admin::where('email',$request->email)->first();
+    if(!$admin)
+    {
+
+        $request->validated($request->all());
+        Admin::create([
+            'email'=>$request->email,
+            'password'=>Hash::make($request->password)
+        ]);
+    return $this->ReturnSuccessMessage('admin registerd successfully');
+
+    }
+
+    return $this->ReturnFailMessage('you are already registered',200);
+}
+
 
 
     public function index()
@@ -64,4 +119,6 @@ class AdminController extends Controller
     {
         //
     }
+
+
 }

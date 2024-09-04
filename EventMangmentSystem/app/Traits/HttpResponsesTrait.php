@@ -1,6 +1,9 @@
 <?php
 namespace app\Traits;
-class HttpResponsesTrait {
+
+
+
+trait HttpResponsesTrait {
 
 public function ReturnSuccessMessage($message='successs',$code=200){
 
@@ -28,11 +31,13 @@ return response() ->json([
 $key=>$value
 ]);
 
-
 }
 
 
 
+public function hello(){
+    return 'hello';
+}
 
 
 

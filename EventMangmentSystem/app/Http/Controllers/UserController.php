@@ -3,12 +3,33 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth ;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
+
+    public function user_login( $request){
+        // $request->validated($request->all());
+        // $cred=$request->only(['email','password']);
+        // $password=bcrypt($request['password']);
+        // return Auth::guard('user');
+return 'hello';
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
     public function index()
     {
         //
