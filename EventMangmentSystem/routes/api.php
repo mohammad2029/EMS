@@ -13,10 +13,41 @@ Route::group(['middleware'=>'auth:api'],function(){
 
 });
 
-Route::group(['prefix'=>'admin'],function(){
-Route::post('register',[AdminController::class,'admin_register'])->name('admin.register');
-Route::post('login',[AdminController::class,'admin_login'])->name('admin.login');
+// ************************************ admin routes ************************************
+
+
+
+Route::group(['prefix'=>'admin',],function(){
+    Route::post('register',[AdminController::class,'admin_register'])->name('admin.register');
+    Route::post('login',[AdminController::class,'admin_login'])->name('admin.login');
+    Route::group(['middleware'=>'auth:api'],function () {
+
+    });
 });
+
+
+
+
+
+
+// ************************************ user routes ************************************
+
+
+
+Route::post('user_register',[UserController::class,'user_register'])->name('user.register');
+Route::post('user_login',[UserController::class,'user_login'])->name('user.login');
+
+
+    Route::group(['middleware'=>'auth:api'],function(){
+        Route::get('hello',[UserController::class,'hello'])->name('user.hello');
+    });
+
+
+
+
+
+
+
 
 
 // Route::post('register',[UserController::class,'admin_register'])->name('admin.register');

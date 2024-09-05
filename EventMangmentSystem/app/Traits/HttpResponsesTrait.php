@@ -14,7 +14,7 @@ return response() ->json([
 ]);
 }
 
-public function ReturnFailMessage($message='successs',$code=500){
+public function ReturnFailMessage($message='failed',$code=500){
 
 return response() ->json([
 'status'=>false,

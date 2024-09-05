@@ -2,26 +2,83 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserLoginRequest;
+use App\Http\Requests\UserRegisterRequest;
+use App\Models\User;
+use App\Traits\HttpResponsesTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth ;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+use HttpResponsesTrait;
+
+public function user_register(UserRegisterRequest $request){
+
+    try {
+        $request->validated($request->all());
+       $user=User::where('email',$request->email)->first();
+       if(!$user)
+       {
+        $image_ext =  $request->file('user_image')->getClientOriginalExtension();
+        $image_name= time() . '.' .$image_ext ;
+        $path='images/users';
+        $request->file('user_image')->move($path,$image_name);
+        User::create([
+                'name'=>$request->name,
+    'email'=>$request->email,
+    'password'=> Hash::make($request->password),
+    'phone_number'=>$request->phone_number,
+    'user_image'=>$image_name,
+    'countrey'=>$request->countrey,
+    'state'=>$request->state,
+    'admin_id'=>$request->admin_id
+        ]);
+        return $this->ReturnSuccessMessage('registerd successfully');
+       }
+       else {
+        return $this->ReturnFailMessage('email already exist');
+       }
+
+    } catch (\Throwable $e) {
+
+        return response()->json([
+            'code' => '500',
+            'error'=>$e->getMessage()
+        ]);
+    }
+}
 
 
-    public function user_login( $request){
-        // $request->validated($request->all());
-        // $cred=$request->only(['email','password']);
-        // $password=bcrypt($request['password']);
-        // return Auth::guard('user');
-return 'hello';
+    public function user_login( UserLoginRequest $request){
+        try {
+            $request->validated($request->all());
+            $user = User::where('email', $request->email)->first();
+            if (Auth::guard('user')->attempt(['email' => $request->email, 'password' => $request->password])) {
+                {
+                   $user->token =  Auth::guard('user')->attempt(['email' => $request->email, 'password' => $request->password]);
+                    return $this->SuccessWithData('user',$user,'loged in successfully');
+                }
 
+            } else {
+                return $this->ReturnFailMessage('email and password does not match');
+            }
+        } catch (\Throwable $e) {
+
+            return response()->json([
+                'code' => '500',
+                'error'=>$e->getMessage()
+            ]);
+        }
         }
 
 
 
 
-
+public function hello(){
+    return 'hello';
+}
 
 
 
