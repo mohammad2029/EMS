@@ -16,37 +16,33 @@ class AdminController extends Controller
 {
     use HttpResponsesTrait;
 
-public function admin_login(LoginAdminRequest $request){
-$request->validated($request->all());
-$admin=Admin::where('email',$request->email)->first();
-if($admin)
-{
-    if(Hash::check($request->password,$admin->password))
+    public function admin_login(LoginAdminRequest $request)
     {
-        $token=Auth::guard('admin') ->attempt(['email'=>$request->email,'password'=>$request->password]);
-        return  response()->json([
-            'token'=>$token,
-            'code'=>'200',
-            'email'=>$request->email,
-            'pass'=>$admin->password,
-            'password_check'=>Hash::check($request->password,$admin->password)
-        ]);
+        try {
+            $request->validated($request->all());
+            $admin = Admin::where('email', $request->email)->first();
+            if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password])) {
+                {
+                   $admin->token =  Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password]);
+                    return $this->SuccessWithData('admin',$admin,'loged in successfully');
+                }
 
+            } else {
+                return $this->ReturnFailMessage('email and password does not match');
+            }
+        } catch (\Throwable $e) {
+
+            return response()->json([
+                'code' => '500',
+                'error'=>$e->getMessage()
+            ]);
+        }
     }
 
-    else
-    {
-        return  response()->json([
-            'code'=>'error',
-        ]);
-    }
-}
 
-// return $user;
-// return auth('admin')->attempt([]);
-// return $password;
 
-}
+
+
 public function admin_register(AdminRegisterRequest $request){
 
     $admin=Admin::where('email',$request->email)->first();
