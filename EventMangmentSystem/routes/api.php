@@ -37,10 +37,16 @@ Route::group(['prefix'=>'admin',],function(){
 Route::post('user_register',[UserController::class,'user_register'])->name('user.register');
 Route::post('user_login',[UserController::class,'user_login'])->name('user.login');
 
+Route::get('login_page', function(){
+    return 'this is login page';
+})->name('login');
 
-    Route::group(['middleware'=>'auth:api'],function(){
-        Route::get('hello',[UserController::class,'hello'])->name('user.hello');
-    });
+Route::group(['middleware'=>'auth:api'],function(){
+    Route::post('user_logout',[UserController::class,'user_logout'])->name('user.logout');
+
+});
+        Route::post('hello',[UserController::class,'hello'])->name('user.hello');
+
 
 
 

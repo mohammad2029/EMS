@@ -14,7 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->use([
-            'test'=> \App\Http\Middleware\testiddleware::class
+            'test'=> \App\Http\Middleware\testiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

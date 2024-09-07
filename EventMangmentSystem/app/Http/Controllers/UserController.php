@@ -9,6 +9,7 @@ use App\Traits\HttpResponsesTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth ;
 use Illuminate\Support\Facades\Hash;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserController extends Controller
 {
@@ -58,7 +59,7 @@ public function user_register(UserRegisterRequest $request){
             if (Auth::guard('user')->attempt(['email' => $request->email, 'password' => $request->password])) {
                 {
                    $user->token =  Auth::guard('user')->attempt(['email' => $request->email, 'password' => $request->password]);
-                    return $this->SuccessWithData('user',$user,'loged in successfully');
+                    return  $this->SuccessWithData('user',$user,'loged in successfully');
                 }
 
             } else {
@@ -74,10 +75,42 @@ public function user_register(UserRegisterRequest $request){
         }
 
 
+public function user_logout(Request $request){
+
+    try{
+        if($request->header('Auth-token')){
+
+            JWTAuth::setToken($request->header('Auth-token'))->invalidate();
+            return  $this->ReturnSuccessMessage('loged out successfully');
+        }
+        return $this->ReturnFailMessage('you are not authorized',403);
+
+    }
+    catch (\Throwable $e) {
+
+        return response()->json([
+            'code' => '500',
+            'error'=>$e->getMessage(),
+        ]);
+    }
+}
 
 
-public function hello(){
-    return 'hello';
+
+
+public function hello(Request $request){
+    try{
+
+                $user = JWTAuth::parseToken()->authenticate();
+                return 'auth'. $user;
+
+    } catch (\Throwable $e) {
+
+        return response()->json([
+            'code' => '500',
+            'error'=>$e->getMessage(),
+        ]);
+    }
 }
 
 
