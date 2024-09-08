@@ -63,6 +63,27 @@ public function admin_register(AdminRegisterRequest $request){
 
 
 
+
+
+
+public function admin_logout(Request $request){
+    try{
+        if($request->header('Auth-token')){
+            return  $this->ReturnSuccessMessage('loged out successfully');
+
+        }
+        return $this->ReturnFailMessage('you are not authorized',403);
+
+    }
+    catch (\Throwable $e) {
+
+        return response()->json([
+            'code' => '500',
+            'error'=>$e->getMessage(),
+        ]);
+    }
+}
+
     public function index()
     {
         //

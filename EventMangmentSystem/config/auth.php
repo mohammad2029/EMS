@@ -44,6 +44,10 @@ return [
             'driver' => 'jwt',
             'provider' => 'users',
         ],
+        'organization' => [
+            'driver' => 'jwt',
+            'provider' => 'organizations',
+        ],
         'user' => [
             'driver' => 'jwt',
             'provider' => 'users',
@@ -82,6 +86,10 @@ return [
         'admins' => [
             'driver' => 'eloquent',
             'model' => App\Models\Admin::class,
+        ],
+        'organizations' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Organization::class,
         ],
     ],
 

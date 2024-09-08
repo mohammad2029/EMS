@@ -2,18 +2,22 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-use Illuminate\Database\Eloquent\Model;
 
-class Organization extends Model
+class Organization extends Authenticatable implements JWTSubject
 {
     use HasFactory;
-
+    protected $primaryKey = 'organization_id';
+    protected $table='organizations';
     protected $fillable =[
-        'organization_id',
+        'email',
+'password',
 'name',
 'logo',
 'organization_description',
@@ -44,4 +48,29 @@ class Organization extends Model
     {
         return $this->hasMany(Organization_speaker::class);
     }
+
+
+
+
+
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
+     */
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
+
+
+
+
+
 }
