@@ -37,6 +37,7 @@ public function user_register(UserRegisterRequest $request){
     'admin_id'=>$request->admin_id
         ]);
         return $this->ReturnSuccessMessage('registerd successfully');
+
        }
        else {
         return $this->ReturnFailMessage('email already exist');

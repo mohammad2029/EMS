@@ -9,6 +9,7 @@ use App\Traits\HttpResponsesTrait;
 use Carbon\Carbon;
 use Illuminate\Contracts\Cache\Store;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class EventController extends Controller
 {
@@ -79,8 +80,12 @@ class EventController extends Controller
         try{
             $request->validated($request->all());
             $event=Event::where('event_id',$request->event_id)->first();
-            $event->update($request->all());
-            return $this->ReturnSuccessMessage('event updated succ');
+            if(Auth::guard('organization')->id()=== $event->organization_id)
+            {
+
+                $event->update($request->all());
+                return $this->ReturnSuccessMessage('event updated succ');
+            }
 
         } catch (\Throwable $e) {
 
@@ -97,11 +102,11 @@ class EventController extends Controller
     {
             try{
                 $event=Event::where('event_id',$request->event_id)->first();
-                if(!empty($event)){
+                if(Auth::guard('organization')->id() === $event->organization_id){
                     $event->delete();
                     return $this->ReturnSuccessMessage('event deleted succ');
                 }
-                return $this->ReturnFailMessage('event not found',404);
+                return $this->ReturnFailMessage('you are not authorized to delete this event',403);
             }catch (\Throwable $e) {
 
                 return response()->json([
@@ -112,17 +117,15 @@ class EventController extends Controller
 
     }
 
-    public function get_event(Request $request)
+    public function show(Request $request)
     {
             try{
                 $event=Event::where('event_id',$request->event_id)->first();
-                return response()->json([
-                    $event
-                ]);
-                // if(!empty($event)){
-                //     return $this->SuccessWithData('event',$event,'event deleted succ');
-                // }
-                // return $this->ReturnFailMessage('event not found',404);
+
+                if(!empty($event)){
+                    return $this->SuccessWithData('event',$event,'event deleted succ');
+                }
+                return $this->ReturnFailMessage('event not found',404);
             }catch (\Throwable $e) {
 
                 return response()->json([

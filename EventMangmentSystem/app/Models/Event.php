@@ -110,7 +110,7 @@ public function setEndDateAttribute($value){
 public function getStartDateAttribute(){
     return Carbon::createFromFormat('Y-m-d', $this->attributes['start_date'])->format('d-m-Y');
 }
-public function getEndDateAttribute($value){
+public function getEndDateAttribute(){
     return Carbon::createFromFormat('Y-m-d', $this->attributes['end_date'])->format('d-m-Y');
 }
 

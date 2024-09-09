@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\EventEmployeeController;
+use App\Http\Controllers\EventPhotoController;
+use App\Http\Controllers\EventRequirmentController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -27,17 +30,58 @@ Route::get('/user', function (Request $request) {
         Route::post('login',[OrganizationController::class,'organization_login'])->name('organization.login');
         Route::group(['middleware'=>'auth:organization'],function(){
             Route::post('logout',[OrganizationController::class,'organization_logout'])->name('organization.logout');
-
+            Route::post('events', [OrganizationController::class,'organization_events'])->name('organization_events.all');
             Route::post('helllo',[OrganizationController::class,'hello'])->name('organization.hello');
         });
     });
 
 
 
+// ************************************ event routes ************************************
 
 
 
+Route::get('all', [EventController::class,'all_events'])->name('all_events');
+Route::group(['prefix'=>'event','middleware'=>'auth:organization'],function(){
+    Route::post('store', [EventController::class,'store'])->name('event.store');
+    Route::post('update', [EventController::class,'update'])->name('event.update');
+    Route::post('destroy', [EventController::class,'destroy'])->name('event.destroy');
+    Route::post('show', [EventController::class,'get_event'])->name('event.get');
+ });
 
+// ************************************ eventEmployees routes ************************************
+
+
+Route::group(['prefix'=>'eventEmployee','middleware'=>'auth:organization'],function(){
+    Route::get('all', [EventEmployeeController::class,'all'])->name('eventEmployee.all');
+    Route::post('store', [EventEmployeeController::class,'store'])->name('eventEmployee.store');
+    Route::post('update', [EventEmployeeController::class,'update'])->name('eventEmployee.update');
+    Route::post('destroy', [EventEmployeeController::class,'destroy'])->name('eventEmployee.destroy');
+    Route::post('show', [EventEmployeeController::class,'show'])->name('eventEmployee.show');
+ });
+
+
+ // ************************************ event photos routes ************************************
+
+
+ Route::group(['prefix'=>'eventPhoto','middleware'=>'auth:organization'],function(){
+    Route::post('store', [EventPhotoController::class,'store_images'])->name('eventphoto.store');
+    Route::post('destroy', [EventPhotoController::class,'destroy'])->name('eventphoto.destroy');
+ });
+
+
+
+ // ************************************ event requirment routes ************************************
+
+
+ Route::group(['prefix'=>'eventRequirment','middleware'=>'auth:organization'],function(){
+    Route::post('store', [EventRequirmentController::class,'store'])->name('eventRequirment.store');
+    Route::post('update', [EventRequirmentController::class,'update'])->name('eventRequirment.update');
+    Route::post('all', [EventRequirmentController::class,'get_event_requriments'])->name('eventRequirment.all');
+    Route::post('destroy', [EventRequirmentController::class,'destroy'])->name('eventRequirment.destroy');
+    Route::post('mark', [EventRequirmentController::class,'mark_event_requirmant'])->name('eventRequirment.mark');
+
+});
 
 
 
@@ -75,18 +119,6 @@ Route::group(['prefix'=>'user',],function(){
 
 
 
-
-// ************************************ event routes ************************************
-
-
-
-Route::group(['prefix'=>'event',],function(){
-   Route::get('all', [EventController::class,'all_events'])->name('all_events');
-   Route::post('store', [EventController::class,'store'])->name('event.store');
-   Route::post('update', [EventController::class,'update'])->name('event.update');
-   Route::post('destroy', [EventController::class,'destroy'])->name('event.destroy');
-   Route::post('get', [EventController::class,'get_event'])->name('event.get');
-});
 
 
 

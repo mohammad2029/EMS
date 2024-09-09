@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class Event_requirment extends Model
 {
     use HasFactory;
+    protected $primaryKey = 'event_requirment_id';
 
     protected $fillable =[
         'event_requirment_description',

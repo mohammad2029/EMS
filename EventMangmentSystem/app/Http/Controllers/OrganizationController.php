@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\OrganizationRegisterRequest;
+use App\Models\Event;
 use App\Models\Organization;
 use Illuminate\Http\Request;
 use App\Traits\HttpResponsesTrait;
@@ -67,11 +68,8 @@ class OrganizationController extends Controller
                 {
                    $organization->token =  Auth::guard('organization')->attempt(['email' => $request->email, 'password' => $request->password]);
 
-                    // return  $this->SuccessWithData('organization',$organization,'loged in successfully');
-                    return  response()->json([
-                        'data'=>$this->SuccessWithData('organization',$organization,'loged in successfully'),
-                        'valid'=> JWTAuth::parseToken()->authenticate()
-                    ]) ;
+                    return  $this->SuccessWithData('organization',$organization,'loged in successfully');
+
                 }
 
             } else {
@@ -114,6 +112,33 @@ public function hello(){
 
     return 'hello';
 }
+
+
+
+public function organization_events (Request $request){
+
+try{
+$events=Event::where('organization_id',$request->organization_id)->get();
+return $this->SuccessWithData('events',$events);
+}catch (\Throwable $e) {
+
+                return response()->json([
+                    'code' => '500',
+                    'error'=>$e->getMessage(),
+                ]);
+            }
+
+
+}
+
+
+
+
+
+
+
+
+
 
 
 

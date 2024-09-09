@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class Event_photo extends Model
 {
     use HasFactory;
-
+    protected $primaryKey='event_photo_id';
     protected $fillable =[
         'photo_path',
         'event_id',
