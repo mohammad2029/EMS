@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -19,12 +20,7 @@ Route::get('/user', function (Request $request) {
 
 
 
-// Route::group(['middleware'=>'auth:api'],function(){
-    // Route::prefix('organization',function(){
 
-    //     });
-
-    // });
 
     Route::prefix('organization')->group(function(){
         Route::post('register',[OrganizationController::class,'organization_register'])->name('organization.register');
@@ -37,10 +33,6 @@ Route::get('/user', function (Request $request) {
     });
 
 
-// Route::group(['middleware'=>'auth:api'],function(){
-//     Route::post('organization_logout',[OrganizationController::class,'organization_logout'])->name('organization.logout');
-
-// });
 
 
 
@@ -84,12 +76,31 @@ Route::group(['prefix'=>'user',],function(){
 
 
 
+// ************************************ event routes ************************************
+
+
+
+Route::group(['prefix'=>'event',],function(){
+   Route::get('all', [EventController::class,'all_events'])->name('all_events');
+   Route::post('store', [EventController::class,'store'])->name('event.store');
+   Route::post('update', [EventController::class,'update'])->name('event.update');
+   Route::post('destroy', [EventController::class,'destroy'])->name('event.destroy');
+   Route::post('get', [EventController::class,'get_event'])->name('event.get');
+});
+
+
+
+
+
+
 
 
 Route::get('login_page', function(){
-    return 'this is login page';
+    return response()->json([
+        'message'=>'you are not authorized',
+        'code'=>403
+    ]);
 })->name('login');
-
 
 
 Route::post('hello',[UserController::class,'hello'])->name('user.hello');
@@ -100,7 +111,4 @@ Route::post('hello',[UserController::class,'hello'])->name('user.hello');
 
 
 
-// Route::post('register',[UserController::class,'admin_register'])->name('admin.register');
 
-
-// Route::prefix()
