@@ -16,6 +16,7 @@ class Event extends Model
     use HasFactory;
     protected $primaryKey = 'event_id';
     protected $fillable = [
+        'is_published',
         'event_name',
         'event_description',
         'countrey',

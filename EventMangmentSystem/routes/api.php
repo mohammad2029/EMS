@@ -42,12 +42,13 @@ Route::prefix('organization')->group(function () {
 
 
 
-Route::get('all', [EventController::class, 'all_events'])->name('all_events');
+Route::get('all', [EventController::class, 'all_events'])->name('event.all');
 Route::group(['prefix' => 'event', 'middleware' => 'auth:organization'], function () {
     Route::post('store', [EventController::class, 'store'])->name('event.store');
     Route::post('update', [EventController::class, 'update'])->name('event.update');
     Route::post('destroy', [EventController::class, 'destroy'])->name('event.destroy');
     Route::post('show', [EventController::class, 'get_event'])->name('event.get');
+    Route::post('publish', [EventController::class, 'publish_event'])->name('event.publish_event');
 });
 
 // ************************************ eventEmployees routes ************************************

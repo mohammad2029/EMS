@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreEventRequest;
 use App\Http\Requests\UpdateEventRequest;
 use App\Models\Event;
+use App\Models\Event_requirment;
 use App\Traits\HttpResponsesTrait;
 use Carbon\Carbon;
 use Illuminate\Contracts\Cache\Store;
@@ -29,7 +30,9 @@ class EventController extends Controller
             'speakers' => function ($q) {
                 $q->select('speaker_id', 'event_id', 'name');
             }
-        ])->get();
+        ])
+            ->where('is_published', 1)
+            ->get();
         return $this->SuccessWithData('events', $events, 'events returned successfully');
     }
 
@@ -134,6 +137,36 @@ class EventController extends Controller
             return response()->json([
                 'code' => '500',
                 'error' => $e->getMessage(),
+            ]);
+        }
+    }
+
+
+    public function publish_event(Request $request)
+    {
+        try {
+            $request->validate(['event_id' => 'required']);
+            $event = Event::find($request->event_id);
+            $requirments_count = Event_requirment::where('event_id', $request->event_id)
+                ->select('event_id', 'is_done')
+                ->get();
+            $completed_requirments_count = Event_requirment::where('event_id', $request->event_id)
+                ->select('event_id', 'is_done')
+                ->where('is_done', 1)
+                ->get();
+
+            if ($requirments_count == $completed_requirments_count) {
+                $event->update([
+                    'is_published' => 1
+                ]);
+                return $this->ReturnSuccessMessage('published succ');
+            } else {
+                return $this->ReturnFailMessage('requirments not done yet');
+            }
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => 500
             ]);
         }
     }
