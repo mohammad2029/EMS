@@ -15,21 +15,21 @@ class Event extends Model
 {
     use HasFactory;
     protected $primaryKey = 'event_id';
-    protected $fillable =[
-'event_name',
-'event_description',
-'countrey',
-'state',
-'street',
-'place',
-'event_type',
-'start_date',
-'end_date',
-'tickets_number',
-'ticket_price',
-'is_done',
-'organization_id',
-'admin_id',
+    protected $fillable = [
+        'event_name',
+        'event_description',
+        'countrey',
+        'state',
+        'street',
+        'place',
+        'event_type',
+        'start_date',
+        'end_date',
+        'tickets_number',
+        'ticket_price',
+        'is_done',
+        'organization_id',
+        'admin_id',
     ];
     public function admin(): BelongsTo
     {
@@ -70,7 +70,6 @@ class Event extends Model
     public function event_sections(): HasMany
     {
         return $this->hasMany(User_Event::class);
-
     }
 
 
@@ -78,7 +77,6 @@ class Event extends Model
     public function event_requirments(): HasMany
     {
         return $this->hasMany(Event_requirment::class);
-
     }
 
 
@@ -86,33 +84,34 @@ class Event extends Model
     public function speakers(): HasMany
     {
         return $this->hasMany(Speaker::class);
-
     }
 
 
 
-public static function eventtype():Attribute
-{
-return Attribute::make(
-get: fn($value) => strtolower($value),
-set: fn($value) => strtolower($value)
-);
-}
+    public static function eventtype(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => strtolower($value),
+            set: fn($value) => strtolower($value)
+        );
+    }
 
 
-public function setStartDateAttribute($value){
-    $this->attributes['start_date']=Carbon::createFromFormat('d-m-Y',$value)->format('Y-m-d');
-}
-public function setEndDateAttribute($value){
-    $this->attributes['end_date']=Carbon::createFromFormat('d-m-Y',$value)->format('Y-m-d');
-}
+    public function setStartDateAttribute($value)
+    {
+        $this->attributes['start_date'] = Carbon::createFromFormat('d-m-Y', $value)->format('Y-m-d');
+    }
+    public function setEndDateAttribute($value)
+    {
+        $this->attributes['end_date'] = Carbon::createFromFormat('d-m-Y', $value)->format('Y-m-d');
+    }
 
-public function getStartDateAttribute(){
-    return Carbon::createFromFormat('Y-m-d', $this->attributes['start_date'])->format('d-m-Y');
-}
-public function getEndDateAttribute(){
-    return Carbon::createFromFormat('Y-m-d', $this->attributes['end_date'])->format('d-m-Y');
-}
-
-
+    public function getStartDateAttribute()
+    {
+        return Carbon::createFromFormat('Y-m-d', $this->attributes['start_date'])->format('d-m-Y');
+    }
+    public function getEndDateAttribute()
+    {
+        return Carbon::createFromFormat('Y-m-d', $this->attributes['end_date'])->format('d-m-Y');
+    }
 }

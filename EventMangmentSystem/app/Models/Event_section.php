@@ -10,12 +10,14 @@ use Illuminate\Database\Eloquent\Model;
 class Event_section extends Model
 {
     use HasFactory;
+    protected $primaryKey = 'event_section_id';
 
-    protected $fillable =[
+    protected $fillable = [
         'description',
-'start_time',
-'end_time',
-'event_id',
+        'start_time',
+        'day_time',
+        'end_time',
+        'event_id',
     ];
 
     public function event(): BelongsTo

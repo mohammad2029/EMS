@@ -11,38 +11,33 @@ use Illuminate\Support\Facades\Auth;
 
 class EventEmployeeController extends Controller
 {
-use HttpResponsesTrait;
+    use HttpResponsesTrait;
 
     public function all()
     {
-        $event_employees=Event_employee::all();
-        return $this->SuccessWithData('event_employees',$event_employees);
+        $event_employees = Event_employee::all();
+        return $this->SuccessWithData('event_employees', $event_employees);
     }
 
 
 
     public function store(StoreEventEmployeeRequest $request)
     {
-        try{
+        try {
             $request->validated($request->all());
             Event_employee::create([
-                'birth_date'=>$request->birth_date,
-'work'=>$request->work,
-'event_id'=>$request->event_id,
+                'birth_date' => $request->birth_date,
+                'work' => $request->work,
+                'event_id' => $request->event_id,
             ]);
             return $this->ReturnSuccessMessage('employee added succ');
         } catch (\Throwable $e) {
 
             return response()->json([
                 'code' => '500',
-                'error'=>$e->getMessage(),
+                'error' => $e->getMessage(),
             ]);
         }
-
-
-
-
-
     }
 
     /**
@@ -50,18 +45,16 @@ use HttpResponsesTrait;
      */
     public function show(Request $request)
     {
-        try{
-            $event_employee=Event_employee::where('event_employee_id',$request->event_employee_id)->first();
-            return $this->SuccessWithData('event_employee',$event_employee);
+        try {
+            $event_employee = Event_employee::where('event_employee_id', $request->event_employee_id)->first();
+            return $this->SuccessWithData('event_employee', $event_employee);
         } catch (\Throwable $e) {
 
             return response()->json([
                 'code' => '500',
-                'error'=>$e->getMessage(),
+                'error' => $e->getMessage(),
             ]);
         }
-
-
     }
 
 
@@ -70,19 +63,17 @@ use HttpResponsesTrait;
      */
     public function update(updateEventEmployeeRequest $request)
     {
-        try{
-            $event_employee=Event_employee::where('event_employee_id',$request->event_employee_id)->first();
+        try {
+            $event_employee = Event_employee::where('event_employee_id', $request->event_employee_id)->first();
             $event_employee->update($request->all());
             return $this->ReturnSuccessMessage('updated succ');
         } catch (\Throwable $e) {
 
             return response()->json([
                 'code' => '500',
-                'error'=>$e->getMessage(),
+                'error' => $e->getMessage(),
             ]);
         }
-
-
     }
 
     /**
@@ -90,17 +81,16 @@ use HttpResponsesTrait;
      */
     public function destroy(Request $request)
     {
-        try{
-            $event_employee=Event_employee::where('event_employee_id',$request->event_employee_id)->first();
+        try {
+            $event_employee = Event_employee::where('event_employee_id', $request->event_employee_id)->first();
             $event_employee->delete();
             return $this->ReturnSuccessMessage('deleted succ');
         } catch (\Throwable $e) {
 
             return response()->json([
                 'code' => '500',
-                'error'=>$e->getMessage(),
+                'error' => $e->getMessage(),
             ]);
         }
-
     }
 }

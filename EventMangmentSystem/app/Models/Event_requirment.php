@@ -12,10 +12,10 @@ class Event_requirment extends Model
     use HasFactory;
     protected $primaryKey = 'event_requirment_id';
 
-    protected $fillable =[
+    protected $fillable = [
         'event_requirment_description',
-'is_done',
-'event_id',
+        'is_done',
+        'event_id',
     ];
 
     public function event(): BelongsTo

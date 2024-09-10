@@ -19,7 +19,7 @@ class EventController extends Controller
      */
     public function all_events()
     {
-        return $this->SuccessWithData('events',Event::all(),'events returned successfully');
+        return $this->SuccessWithData('events', Event::all(), 'events returned successfully');
     }
 
     /**
@@ -31,42 +31,37 @@ class EventController extends Controller
      */
     public function store(StoreEventRequest $request)
     {
-                try{
-                    $request->validated($request->all());
-                    $carbon_start_date=Carbon::createFromFormat('d-m-Y',$request->start_date);
-                    $carbon_end_date=Carbon::createFromFormat('d-m-Y',$request->end_date);
-                    if($carbon_end_date->isAfter($carbon_start_date)&& $carbon_start_date->greaterThan(Carbon::today()))
-                    {
-                        $carbon_start_date->format('Y-m-d');
-                        $carbon_end_date->format('Y-m-d');
-                        Event::create([
-    'event_name'=>$request->event_name,
-    'event_description'=>$request->event_description,
-    'countrey'=>$request->countrey,
-    'state'=>$request->state,
-    'street'=>$request->street,
-    'place'=>$request->place,
-    'event_type'=>$request->event_type,
-    'start_date'=>$request->start_date,
-    'end_date'=>$request->end_date,
-    'tickets_number'=>$request->tickets_number,
-    'ticket_price'=>$request->ticket_price,
-    'organization_id'=>$request->organization_id,
-                        ]);
-    return $this->ReturnSuccessMessage('event added succ');
+        try {
+            $request->validated($request->all());
+            $carbon_start_date = Carbon::createFromFormat('d-m-Y', $request->start_date);
+            $carbon_end_date = Carbon::createFromFormat('d-m-Y', $request->end_date);
+            if ($carbon_end_date->isAfter($carbon_start_date) && $carbon_start_date->greaterThan(Carbon::today())) {
+                $carbon_start_date->format('Y-m-d');
+                $carbon_end_date->format('Y-m-d');
+                Event::create([
+                    'event_name' => $request->event_name,
+                    'event_description' => $request->event_description,
+                    'countrey' => $request->countrey,
+                    'state' => $request->state,
+                    'street' => $request->street,
+                    'place' => $request->place,
+                    'event_type' => $request->event_type,
+                    'start_date' => $request->start_date,
+                    'end_date' => $request->end_date,
+                    'tickets_number' => $request->tickets_number,
+                    'ticket_price' => $request->ticket_price,
+                    'organization_id' => $request->organization_id,
+                ]);
+                return $this->ReturnSuccessMessage('event added succ');
+            } else
+                return $this->ReturnFailMessage('end date or start date is invalid');
+        } catch (\Throwable $e) {
 
-                    }
-                    else
-                    return $this->ReturnFailMessage('end date or start date is invalid');
-                }
-                catch (\Throwable $e) {
-
-                    return response()->json([
-                        'code' => '500',
-                        'error'=>$e->getMessage(),
-                    ]);
-                }
-
+            return response()->json([
+                'code' => '500',
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
 
@@ -77,22 +72,20 @@ class EventController extends Controller
      */
     public function update(UpdateEventRequest $request)
     {
-        try{
+        try {
             $request->validated($request->all());
-            $event=Event::where('event_id',$request->event_id)->first();
-            if(Auth::guard('organization')->id()=== $event->organization_id)
-            {
+            $event = Event::where('event_id', $request->event_id)->first();
+            if (Auth::guard('organization')->id() === $event->organization_id) {
 
                 $event->update($request->all());
                 return $this->ReturnSuccessMessage('event updated succ');
             }
-
         } catch (\Throwable $e) {
 
-                    return response()->json([
-                        'code' => '500',
-                        'error'=>$e->getMessage(),
-                    ]);
+            return response()->json([
+                'code' => '500',
+                'error' => $e->getMessage(),
+            ]);
         }
     }
 
@@ -100,49 +93,37 @@ class EventController extends Controller
 
     public function destroy(Request $request)
     {
-            try{
-                $event=Event::where('event_id',$request->event_id)->first();
-                if(Auth::guard('organization')->id() === $event->organization_id){
-                    $event->delete();
-                    return $this->ReturnSuccessMessage('event deleted succ');
-                }
-                return $this->ReturnFailMessage('you are not authorized to delete this event',403);
-            }catch (\Throwable $e) {
+        try {
+            $event = Event::where('event_id', $request->event_id)->first();
+            if (Auth::guard('organization')->id() === $event->organization_id) {
+                $event->delete();
+                return $this->ReturnSuccessMessage('event deleted succ');
+            }
+            return $this->ReturnFailMessage('you are not authorized to delete this event', 403);
+        } catch (\Throwable $e) {
 
-                return response()->json([
-                    'code' => '500',
-                    'error'=>$e->getMessage(),
-                ]);
-    }
-
+            return response()->json([
+                'code' => '500',
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     public function show(Request $request)
     {
-            try{
-                $event=Event::where('event_id',$request->event_id)->first();
+        try {
+            $event = Event::where('event_id', $request->event_id)->first();
 
-                if(!empty($event)){
-                    return $this->SuccessWithData('event',$event,'event deleted succ');
-                }
-                return $this->ReturnFailMessage('event not found',404);
-            }catch (\Throwable $e) {
+            if (!empty($event)) {
+                return $this->SuccessWithData('event', $event, 'event deleted succ');
+            }
+            return $this->ReturnFailMessage('event not found', 404);
+        } catch (\Throwable $e) {
 
-                return response()->json([
-                    'code' => '500',
-                    'error'=>$e->getMessage(),
-                ]);
+            return response()->json([
+                'code' => '500',
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
-
-    }
-
-
-
-
-
-
-
-
-
-
 }
