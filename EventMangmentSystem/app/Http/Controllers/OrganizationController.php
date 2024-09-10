@@ -16,62 +16,54 @@ class OrganizationController extends Controller
 {
     use HttpResponsesTrait;
 
-    public function organization_register(OrganizationRegisterRequest $request){
+    public function organization_register(OrganizationRegisterRequest $request)
+    {
 
         try {
             $request->validated($request->all());
-           $organization=Organization::where('email',$request->email)->first();
-           if(!$organization)
-           {
-            $image_ext =  $request->file('logo')->getClientOriginalExtension();
-            $image_name= time() . '.' .$image_ext ;
-            $path='images/organizations';
-            $request->file('logo')->move($path,$image_name);
-            Organization::create([
-                'email'=>$request->email,
-                'password'=>Hash::make($request->password),
-                'name'=>$request->name,
-                'logo'=>$image_name,
-                'organization_description'=>$request->organization_description,
-                'organization_type'=>$request->organization_type,
-                'admin_id'=>$request->admin_id,
-            ]);
-            return $this->ReturnSuccessMessage('registerd successfully');
-           }
-           else {
-            return $this->ReturnFailMessage('email already exist');
-           }
-
+            $organization = Organization::where('email', $request->email)->first();
+            if (!$organization) {
+                $image_ext =  $request->file('logo')->getClientOriginalExtension();
+                $image_name = time() . '.' . $image_ext;
+                $path = 'images/organizations';
+                $request->file('logo')->move($path, $image_name);
+                Organization::create([
+                    'email' => $request->email,
+                    'password' => Hash::make($request->password),
+                    'name' => $request->name,
+                    'logo' => $image_name,
+                    'organization_description' => $request->organization_description,
+                    'organization_type' => $request->organization_type,
+                    'admin_id' => $request->admin_id,
+                ]);
+                return $this->ReturnSuccessMessage('registerd successfully');
+            } else {
+                return $this->ReturnFailMessage('email already exist');
+            }
         } catch (\Throwable $e) {
 
             return response()->json([
                 'code' => '500',
-                'error'=>$e->getMessage()
+                'error' => $e->getMessage()
             ]);
         }
-
-
-
-
     }
 
 
 
-    public function organization_login( Request $request){
+    public function organization_login(Request $request)
+    {
         try {
             $request->validate([
-                'email'=>['required','string'],
-                'password'=>['required','min:8','string']
+                'email' => ['required', 'string'],
+                'password' => ['required', 'min:8', 'string']
             ]);
             $organization = Organization::where('email', $request->email)->first();
-            if (Auth::guard('organization')->attempt(['email' => $request->email, 'password' => $request->password])) {
-                {
-                   $organization->token =  Auth::guard('organization')->attempt(['email' => $request->email, 'password' => $request->password]);
+            if (Auth::guard('organization')->attempt(['email' => $request->email, 'password' => $request->password])) { {
+                    $organization->token =  Auth::guard('organization')->attempt(['email' => $request->email, 'password' => $request->password]);
 
-                    return  $this->SuccessWithData('organization',$organization,'loged in successfully');
-
+                    return  $this->SuccessWithData('organization', $organization, 'loged in successfully');
                 }
-
             } else {
                 return $this->ReturnFailMessage('email and password does not match');
             }
@@ -79,60 +71,57 @@ class OrganizationController extends Controller
 
             return response()->json([
                 'code' => '500',
-                'error'=>$e->getMessage()
+                'error' => $e->getMessage()
             ]);
         }
+    }
 
+
+
+    public function organization_logout(Request $request)
+    {
+
+        try {
+            if ($request->header('Auth-token')) {
+                return  $this->ReturnSuccessMessage('loged out successfully');
+            }
+            return $this->ReturnFailMessage('you are not authorized', 403);
+        } catch (\Throwable $e) {
+
+            return response()->json([
+                'code' => '500',
+                'error' => $e->getMessage(),
+            ]);
         }
+    }
 
 
 
-        public function organization_logout(Request $request){
 
-            try{
-                if($request->header('Auth-token')){
-                    return  $this->ReturnSuccessMessage('loged out successfully');
 
-                }
-                return $this->ReturnFailMessage('you are not authorized',403);
 
-            }
-            catch (\Throwable $e) {
+    public function organization_events(Request $request)
+    {
 
-                return response()->json([
-                    'code' => '500',
-                    'error'=>$e->getMessage(),
-                ]);
-            }
+        try {
+            $events = Event::where('organization_id', $request->organization_id)->get();
+            return $this->SuccessWithData('events', $events);
+        } catch (\Throwable $e) {
+
+            return response()->json([
+                'code' => '500',
+                'error' => $e->getMessage(),
+            ]);
         }
+    }
 
 
 
-public function hello(){
+    public function hello()
+    {
 
-    return 'hello';
-}
-
-
-
-public function organization_events (Request $request){
-
-try{
-$events=Event::where('organization_id',$request->organization_id)->get();
-return $this->SuccessWithData('events',$events);
-}catch (\Throwable $e) {
-
-                return response()->json([
-                    'code' => '500',
-                    'error'=>$e->getMessage(),
-                ]);
-            }
-
-
-}
-
-
-
+        return 'hello';
+    }
 
 
 

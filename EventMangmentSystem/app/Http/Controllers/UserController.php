@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserLoginRequest;
 use App\Http\Requests\UserRegisterRequest;
+use App\Models\Event;
 use App\Models\User;
+use App\Models\User_Event;
 use App\Traits\HttpResponsesTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -91,6 +93,46 @@ class UserController extends Controller
         }
     }
 
+
+
+
+    public function user_event_register(Request $request)
+    {
+        try {
+
+            $request->validate([
+                'user_id' => 'required',
+                'event_id' => 'required',
+            ]);
+            $event = Event::where('event_id', $request->event_id)
+                ->select('event_id', 'is_done', 'remaining_tickets')
+                ->first();
+            $user_event = User_Event::where('user_id', $request->user_id)
+                ->where('event_id', $request->event_id)
+                ->first();
+            if ($event->remaining_tickets == 0)
+                return $this->ReturnFailMessage('there is no tickests left ');
+
+            if ($user_event)
+                return $this->ReturnFailMessage('you are already registerd ');
+
+            if ($event->is_done == 0 && $event->remaining_tickets > 0) {
+                $event->update([
+                    'remaining_tickets' => $event->remaining_tickets - 1,
+                ]);
+                User_Event::create([
+                    'user_id' => $request->user_id,
+                    'event_id' => $request->event_id,
+                ]);
+                return $this->ReturnSuccessMessage('registerd succ');
+            }
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'code' => 500
+            ]);
+        }
+    }
 
 
 

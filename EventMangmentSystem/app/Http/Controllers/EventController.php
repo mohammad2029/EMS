@@ -63,6 +63,7 @@ class EventController extends Controller
                     'start_date' => $request->start_date,
                     'end_date' => $request->end_date,
                     'tickets_number' => $request->tickets_number,
+                    'remaining_tickets' => $request->tickets_number,
                     'ticket_price' => $request->ticket_price,
                     'organization_id' => $request->organization_id,
                 ]);

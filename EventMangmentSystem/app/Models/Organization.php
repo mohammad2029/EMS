@@ -14,15 +14,15 @@ class Organization extends Authenticatable implements JWTSubject
 {
     use HasFactory;
     protected $primaryKey = 'organization_id';
-    protected $table='organizations';
-    protected $fillable =[
+    protected $table = 'organizations';
+    protected $fillable = [
         'email',
-'password',
-'name',
-'logo',
-'organization_description',
-'organization_type',
-'admin_id',
+        'password',
+        'name',
+        'logo',
+        'organization_description',
+        'organization_type',
+        'admin_id',
     ];
 
 
@@ -37,6 +37,12 @@ class Organization extends Authenticatable implements JWTSubject
     }
 
 
+
+
+    public function events(): HasMany
+    {
+        return $this->hasMany(Event::class);
+    }
     public function organization_sections(): HasMany
     {
         return $this->hasMany(Organization_section::class);
@@ -68,9 +74,4 @@ class Organization extends Authenticatable implements JWTSubject
     {
         return [];
     }
-
-
-
-
-
 }

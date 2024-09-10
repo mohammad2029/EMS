@@ -10,11 +10,12 @@ use Illuminate\Database\Eloquent\Model;
 class User_Event extends Model
 {
     use HasFactory;
-
-    protected $filable=[
+    protected $table = 'user_events';
+    protected $primaryKey = 'user_event_id';
+    protected $fillable = [
+        'user_id',
         'rate',
-'event_id',
-'user_id',
+        'event_id',
     ];
 
     public function user(): BelongsTo

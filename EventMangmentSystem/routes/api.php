@@ -125,9 +125,9 @@ Route::group(['prefix' => 'admin',], function () {
 Route::group(['prefix' => 'user',], function () {
     Route::post('register', [UserController::class, 'user_register'])->name('user.register');
     Route::post('login', [UserController::class, 'user_login'])->name('user.login');
-
     Route::group(['middleware' => 'auth:user'], function () {
-        Route::post('logout', [AdminController::class, 'admin_logout'])->name('user.logout');
+        Route::post('logout', [UserController::class, 'user_logout'])->name('user.logout');
+        Route::post('event_register', [UserController::class, 'user_event_register'])->name('userEvent.register');
     });
 });
 
