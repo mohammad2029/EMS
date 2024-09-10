@@ -48,14 +48,14 @@ class Event extends Model
 
     public function user_events(): HasMany
     {
-        return $this->hasMany(User_Event::class);
+        return $this->hasMany(User_Event::class, 'event_id');
     }
 
 
 
     public function event_employees(): HasMany
     {
-        return $this->hasMany(Event_employee::class);
+        return $this->hasMany(Event_employee::class, 'event_id');
     }
 
 
@@ -63,27 +63,27 @@ class Event extends Model
 
     public function event_photos(): HasMany
     {
-        return $this->hasMany(Event_photo::class);
+        return $this->hasMany(Event_photo::class, 'event_id');
     }
 
 
     public function event_sections(): HasMany
     {
-        return $this->hasMany(User_Event::class);
+        return $this->hasMany(User_Event::class, 'event_id');
     }
 
 
 
     public function event_requirments(): HasMany
     {
-        return $this->hasMany(Event_requirment::class);
+        return $this->hasMany(Event_requirment::class, 'event_id');
     }
 
 
 
     public function speakers(): HasMany
     {
-        return $this->hasMany(Speaker::class);
+        return $this->hasMany(Speaker::class, 'event_id');
     }
 
 

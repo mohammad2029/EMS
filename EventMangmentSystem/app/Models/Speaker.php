@@ -11,10 +11,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Speaker extends Model
 {
     use HasFactory;
-    protected $fillable =[
+    protected $fillable = [
+        'name',
         'speaker_id',
-'speaker_contact_email',
-'event_id',
+        'speaker_contact_email',
+        'event_id',
     ];
 
     public function event(): BelongsTo

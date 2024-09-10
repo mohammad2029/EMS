@@ -19,7 +19,18 @@ class EventController extends Controller
      */
     public function all_events()
     {
-        return $this->SuccessWithData('events', Event::all(), 'events returned successfully');
+        $events = Event::with([
+            'event_photos' => function ($q) {
+                $q->select('event_photo_id', 'event_id', 'photo_path');
+            },
+            'event_employees' => function ($q) {
+                $q->select('event_employee_id', 'event_id', 'work');
+            },
+            'speakers' => function ($q) {
+                $q->select('speaker_id', 'event_id', 'name');
+            }
+        ])->get();
+        return $this->SuccessWithData('events', $events, 'events returned successfully');
     }
 
     /**
