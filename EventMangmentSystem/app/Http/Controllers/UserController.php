@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Route;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserController extends Controller
@@ -150,15 +151,18 @@ class UserController extends Controller
     {
 
         try {
-            $request->validate(['id' => 'required']);
-            $user = User::find($request->id);
-            $code = rand(1000, 9999);
-            $user->verify_code = $code;
-            $user->update([
-                'verify_code' => $code
-            ]);
-            Mail::to($user->email)->send(new VerifyEmail($code, now()->addMinutes(60)));
-            return $this->ReturnSuccessMessage('code sent succ');
+            // $request->validate(['id' => 'required']);
+            // $user = User::find($request->id);
+            // $code = rand(1000, 9999);
+            // $user->verify_code = $code;
+            // $user->update([
+            //     'verify_code' => $code
+            // ]);
+            // Mail::to($user->email)->send(new VerifyEmail($code, now()->addMinutes(60)));
+            // return $this->ReturnSuccessMessage('code sent succ');
+            // Route::currentRouteName();
+            // Route::currentRouteName();
+            return 'name ' . Route::currentRouteName();
         } catch (\Throwable $e) {
             return response()->json([
                 'message' => $e->getMessage(),

@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\OrganizationRegisterRequest;
+use App\Mail\VerifyEmail;
 use App\Models\Event;
 use App\Models\Organization;
 use Illuminate\Http\Request;
 use App\Traits\HttpResponsesTrait;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -27,16 +29,19 @@ class OrganizationController extends Controller
                 $image_name = time() . '.' . $image_ext;
                 $path = 'images/organizations';
                 $request->file('logo')->move($path, $image_name);
-                Organization::create([
+                $code = rand(1000, 9999);
+                $new_organization = Organization::create([
                     'email' => $request->email,
                     'password' => Hash::make($request->password),
                     'name' => $request->name,
                     'logo' => $image_name,
                     'organization_description' => $request->organization_description,
+                    'code' => $code,
                     'organization_type' => $request->organization_type,
                     'admin_id' => $request->admin_id,
                 ]);
-                return $this->ReturnSuccessMessage('registerd successfully');
+                Mail::to($new_organization->email)->send(new VerifyEmail($code, now()->addMinutes(60)));
+                return $this->ReturnSuccessMessage('registerd successfully , verification code sent to your email');
             } else {
                 return $this->ReturnFailMessage('email already exist');
             }

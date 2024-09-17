@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventEmployeeController;
 use App\Http\Controllers\EventPhotoController;
@@ -29,6 +30,8 @@ Route::get('/user', function (Request $request) {
 Route::prefix('organization')->group(function () {
     Route::post('register', [OrganizationController::class, 'organization_register'])->name('organization.register');
     Route::post('login', [OrganizationController::class, 'organization_login'])->name('organization.login');
+    Route::post('email_verify', [AuthController::class, 'send_verification_code'])->name('organization.send_verification_code');
+
     Route::group(['middleware' => 'auth:organization'], function () {
         Route::post('logout', [OrganizationController::class, 'organization_logout'])->name('organization.logout');
         Route::post('events', [OrganizationController::class, 'organization_events'])->name('organization_events.all');
@@ -126,7 +129,7 @@ Route::group(['prefix' => 'admin',], function () {
 Route::group(['prefix' => 'user',], function () {
     Route::post('register', [UserController::class, 'user_register'])->name('user.register');
     Route::post('login', [UserController::class, 'user_login'])->name('user.login');
-    Route::post('email_verify', [UserController::class, 'send_verification_code'])->name('user.send_verification_code');
+    Route::post('email_verify', [AuthController::class, 'send_verification_code'])->name('user.send_verification_code');
     Route::group(['middleware' => 'auth:user'], function () {
         Route::post('logout', [UserController::class, 'user_logout'])->name('user.logout');
         Route::post('event_register', [UserController::class, 'user_event_register'])->name('user.event_register');
