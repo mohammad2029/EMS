@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -12,7 +12,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable implements JWTSubject
+class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 {
     use HasFactory, Notifiable;
 
@@ -21,17 +21,17 @@ class User extends Authenticatable implements JWTSubject
      *
      * @var array<int, string>
      */
-    protected $table='users';
-    protected $primaryKey='user_id';
+    protected $table = 'users';
+    protected $primaryKey = 'user_id';
     protected $fillable = [
-'name',
-'email',
-'password',
-'phone_number',
-'user_image',
-'countrey',
-'state',
-'admin_id'
+        'name',
+        'email',
+        'password',
+        'phone_number',
+        'user_image',
+        'countrey',
+        'state',
+        'admin_id'
     ];
 
 
@@ -86,5 +86,4 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
-
 }

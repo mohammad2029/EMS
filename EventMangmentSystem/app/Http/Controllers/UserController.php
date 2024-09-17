@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserLoginRequest;
 use App\Http\Requests\UserRegisterRequest;
+use App\Mail\testMailable;
+use App\Mail\VerifyEmail;
 use App\Models\Event;
 use App\Models\User;
 use App\Models\User_Event;
@@ -11,6 +13,7 @@ use App\Traits\HttpResponsesTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserController extends Controller
@@ -28,7 +31,9 @@ class UserController extends Controller
                 $image_name = time() . '.' . $image_ext;
                 $path = 'images/users';
                 $request->file('user_image')->move($path, $image_name);
-                User::create([
+                $code = rand(1000, 9999);
+                return $this->ReturnSuccessMessage('code sent succ');
+                $new_user =  User::create([
                     'name' => $request->name,
                     'email' => $request->email,
                     'password' => Hash::make($request->password),
@@ -36,9 +41,12 @@ class UserController extends Controller
                     'user_image' => $image_name,
                     'countrey' => $request->countrey,
                     'state' => $request->state,
+                    'code' => $code,
                     'admin_id' => $request->admin_id
                 ]);
-                return $this->ReturnSuccessMessage('registerd successfully');
+                Mail::to($new_user->email)->send(new VerifyEmail($code, now()->addMinutes(60)));
+
+                return $this->ReturnSuccessMessage('registerd successfully , code sent to your email');
             } else {
                 return $this->ReturnFailMessage('email already exist');
             }
@@ -96,6 +104,8 @@ class UserController extends Controller
 
 
 
+
+
     public function user_event_register(Request $request)
     {
         try {
@@ -136,20 +146,43 @@ class UserController extends Controller
 
 
 
-    public function hello(Request $request)
+    public function send_verification_code(Request $request)
     {
+
         try {
-
-            $user = JWTAuth::parseToken()->authenticate();
-            return 'auth' . $user;
+            $request->validate(['id' => 'required']);
+            $user = User::find($request->id);
+            $code = rand(1000, 9999);
+            $user->verify_code = $code;
+            $user->update([
+                'verify_code' => $code
+            ]);
+            Mail::to($user->email)->send(new VerifyEmail($code, now()->addMinutes(60)));
+            return $this->ReturnSuccessMessage('code sent succ');
         } catch (\Throwable $e) {
-
             return response()->json([
-                'code' => '500',
-                'error' => $e->getMessage(),
+                'message' => $e->getMessage(),
+                'code' => 500
             ]);
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -209,5 +242,28 @@ class UserController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+
+
+
+
+
+
+
+
+    public function hello(Request $request)
+    {
+        try {
+
+            $user = JWTAuth::parseToken()->authenticate();
+            return 'auth' . $user;
+        } catch (\Throwable $e) {
+
+            return response()->json([
+                'code' => '500',
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 }

@@ -32,6 +32,7 @@ Route::prefix('organization')->group(function () {
     Route::group(['middleware' => 'auth:organization'], function () {
         Route::post('logout', [OrganizationController::class, 'organization_logout'])->name('organization.logout');
         Route::post('events', [OrganizationController::class, 'organization_events'])->name('organization_events.all');
+        Route::post('ended_events', [OrganizationController::class, 'organization_ended_events'])->name('organization.organization_ended_events');
         Route::post('helllo', [OrganizationController::class, 'hello'])->name('organization.hello');
     });
 });
@@ -125,9 +126,10 @@ Route::group(['prefix' => 'admin',], function () {
 Route::group(['prefix' => 'user',], function () {
     Route::post('register', [UserController::class, 'user_register'])->name('user.register');
     Route::post('login', [UserController::class, 'user_login'])->name('user.login');
+    Route::post('email_verify', [UserController::class, 'send_verification_code'])->name('user.send_verification_code');
     Route::group(['middleware' => 'auth:user'], function () {
         Route::post('logout', [UserController::class, 'user_logout'])->name('user.logout');
-        Route::post('event_register', [UserController::class, 'user_event_register'])->name('userEvent.register');
+        Route::post('event_register', [UserController::class, 'user_event_register'])->name('user.event_register');
     });
 });
 

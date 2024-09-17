@@ -115,6 +115,25 @@ class OrganizationController extends Controller
         }
     }
 
+    public function organization_ended_events(Request $request)
+    {
+
+        try {
+            $events = Event::where('organization_id', $request->organization_id)
+                ->where('is_done', 1)
+                ->get();
+            return $this->SuccessWithData('events', $events);
+        } catch (\Throwable $e) {
+
+            return response()->json([
+                'code' => '500',
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+
+
+
 
 
     public function hello()
