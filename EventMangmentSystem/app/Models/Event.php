@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Event extends Model
 {
@@ -86,6 +87,13 @@ class Event extends Model
     public function speakers(): HasMany
     {
         return $this->hasMany(Speaker::class, 'event_id');
+    }
+
+
+
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(Event::class, 'user_events', 'user_id', 'event_id');
     }
 
 

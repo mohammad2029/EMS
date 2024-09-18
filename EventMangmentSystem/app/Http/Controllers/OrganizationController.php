@@ -138,7 +138,25 @@ class OrganizationController extends Controller
     }
 
 
+    public function organization_event_show(Request $request)
+    {
+        try {
+            $request->validate(['event_id' => 'required']);
+            $event = Event::with(['event_employees', 'event_photos', 'event_sections', 'event_requirments', 'speakers'])
+                ->where('event_id', $request->event_id)
+                ->first();
+            // $event = Event::whereBelongsTo('organization')
+            //     ->where('event_id', $request->event_id)
+            //     ->first();
+            return $this->SuccessWithData('event', $event);
+        } catch (\Throwable $e) {
 
+            return response()->json([
+                'code' => '500',
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
 
 
     public function hello()

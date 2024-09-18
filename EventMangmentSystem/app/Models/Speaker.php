@@ -11,9 +11,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Speaker extends Model
 {
     use HasFactory;
+    protected $primaryKey = 'speaker_id';
+
     protected $fillable = [
         'name',
-        'speaker_id',
         'speaker_contact_email',
         'event_id',
     ];

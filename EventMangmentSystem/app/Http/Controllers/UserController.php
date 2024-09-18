@@ -146,23 +146,17 @@ class UserController extends Controller
     }
 
 
-
-    public function send_verification_code(Request $request)
+    public function show_registerd_events()
     {
-
         try {
-            // $request->validate(['id' => 'required']);
-            // $user = User::find($request->id);
-            // $code = rand(1000, 9999);
-            // $user->verify_code = $code;
-            // $user->update([
-            //     'verify_code' => $code
-            // ]);
-            // Mail::to($user->email)->send(new VerifyEmail($code, now()->addMinutes(60)));
-            // return $this->ReturnSuccessMessage('code sent succ');
-            // Route::currentRouteName();
-            // Route::currentRouteName();
-            return 'name ' . Route::currentRouteName();
+
+            $user = User::find(Auth::guard('user')->id());
+            $user->events()->get();
+            $events = $user->events()
+                ->select(['events.event_id', 'place'])
+                ->with(['speakers', 'event_sections', 'event_photos'])
+                ->get();
+            return $this->SuccessWithData('events', $events);
         } catch (\Throwable $e) {
             return response()->json([
                 'message' => $e->getMessage(),
@@ -178,10 +172,22 @@ class UserController extends Controller
 
 
 
+    public function user_event_show(Request $request)
+    {
+        try {
+            $request->validate(['event_id' => 'required']);
+            $event = Event::with(['event_photos', 'event_sections',  'speakers'])
+                ->where('event_id', $request->event_id)
+                ->first();
+            return $this->SuccessWithData('event', $event);
+        } catch (\Throwable $e) {
 
-
-
-
+            return response()->json([
+                'code' => '500',
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
 
 
 

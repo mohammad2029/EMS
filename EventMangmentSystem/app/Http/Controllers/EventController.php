@@ -127,11 +127,9 @@ class EventController extends Controller
     public function show(Request $request)
     {
         try {
-            $event = Event::where('event_id', $request->event_id)->first();
+            $event = Event::with(['']);
 
-            if (!empty($event)) {
-                return $this->SuccessWithData('event', $event, 'event deleted succ');
-            }
+
             return $this->ReturnFailMessage('event not found', 404);
         } catch (\Throwable $e) {
 

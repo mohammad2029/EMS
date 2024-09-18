@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 
@@ -49,21 +50,29 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     {
         return $this->hasMany(Interst::class);
     }
+
+
+
+
     /**
-     * The attributes that should be hidden for serialization.
+     * The roles that belong to the User
      *
-     * @var array<int, string>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
+    public function events(): BelongsToMany
+    {
+        return $this->belongsToMany(Event::class, 'user_events', 'user_id', 'event_id');
+    }
+
+
+
+
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
+
     protected function casts(): array
     {
         return [

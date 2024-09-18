@@ -8,6 +8,7 @@ use App\Http\Controllers\EventPhotoController;
 use App\Http\Controllers\EventRequirmentController;
 use App\Http\Controllers\EventSectionController;
 use App\Http\Controllers\OrganizationController;
+use App\Http\Controllers\SpeakerController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -35,6 +36,7 @@ Route::prefix('organization')->group(function () {
     Route::group(['middleware' => 'auth:organization'], function () {
         Route::post('logout', [OrganizationController::class, 'organization_logout'])->name('organization.logout');
         Route::post('events', [OrganizationController::class, 'organization_events'])->name('organization_events.all');
+        Route::post('event_show', [OrganizationController::class, 'organization_event_show'])->name('organization_event.show');
         Route::post('ended_events', [OrganizationController::class, 'organization_ended_events'])->name('organization.organization_ended_events');
         Route::post('helllo', [OrganizationController::class, 'hello'])->name('organization.hello');
     });
@@ -51,7 +53,7 @@ Route::group(['prefix' => 'event', 'middleware' => 'auth:organization'], functio
     Route::post('store', [EventController::class, 'store'])->name('event.store');
     Route::post('update', [EventController::class, 'update'])->name('event.update');
     Route::post('destroy', [EventController::class, 'destroy'])->name('event.destroy');
-    Route::post('show', [EventController::class, 'get_event'])->name('event.get');
+    // Route::post('show', [EventController::class, 'get_event'])->name('event.get');
     Route::post('publish', [EventController::class, 'publish_event'])->name('event.publish_event');
 });
 
@@ -100,6 +102,17 @@ Route::group(['prefix' => 'eventSection', 'middleware' => 'auth:organization'], 
 });
 
 
+// ************************************ speaker routes ************************************
+
+
+Route::group(['prefix' => 'speaker', 'middleware' => 'auth:organization'], function () {
+    Route::post('store', [SpeakerController::class, 'store'])->name('speaker.store');
+    Route::post('update', [SpeakerController::class, 'update'])->name('speaker.update');
+    Route::post('destroy', [SpeakerController::class, 'destroy'])->name('speaker.destroy');
+    Route::post('index', [SpeakerController::class, 'index'])->name('speaker.index');
+    Route::post('show', [SpeakerController::class, 'show'])->name('speaker.show');
+});
+
 
 
 
@@ -133,6 +146,8 @@ Route::group(['prefix' => 'user',], function () {
     Route::group(['middleware' => 'auth:user'], function () {
         Route::post('logout', [UserController::class, 'user_logout'])->name('user.logout');
         Route::post('event_register', [UserController::class, 'user_event_register'])->name('user.event_register');
+        Route::post('event_show', [UserController::class, 'user_event_show'])->name('user_event.show');
+        Route::get('registerd_event', [UserController::class, 'show_registerd_events'])->name('user.show_registerd_events');
     });
 });
 
