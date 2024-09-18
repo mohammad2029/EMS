@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Contracts\Cache\Store;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class EventController extends Controller
 {
@@ -36,13 +37,7 @@ class EventController extends Controller
         return $this->SuccessWithData('events', $events, 'events returned successfully');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreEventRequest $request)
     {
         try {
@@ -124,21 +119,6 @@ class EventController extends Controller
         }
     }
 
-    public function show(Request $request)
-    {
-        try {
-            $event = Event::with(['']);
-
-
-            return $this->ReturnFailMessage('event not found', 404);
-        } catch (\Throwable $e) {
-
-            return response()->json([
-                'code' => '500',
-                'error' => $e->getMessage(),
-            ]);
-        }
-    }
 
 
     public function publish_event(Request $request)
@@ -166,6 +146,22 @@ class EventController extends Controller
             return response()->json([
                 'message' => $e->getMessage(),
                 'code' => 500
+            ]);
+        }
+    }
+
+
+    public function search_throw_event_type(Request $request)
+    {
+        try {
+            $request->validate(['event_type' => Rule::in(['medical', 'cultural', 'sport', 'technical', 'scientific', 'artistic', 'entertaining', 'commercial'])]);
+            $events = Event::where('event_type', $request->event_type)->get();
+            return $this->SuccessWithData('events', $events);
+        } catch (\Throwable $e) {
+
+            return response()->json([
+                'code' => '500',
+                'error' => $e->getMessage(),
             ]);
         }
     }

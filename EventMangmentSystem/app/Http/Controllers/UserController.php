@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\RegisterEvent;
 use App\Http\Requests\UserLoginRequest;
 use App\Http\Requests\UserRegisterRequest;
 use App\Mail\testMailable;
@@ -45,8 +46,8 @@ class UserController extends Controller
                     'code' => $code,
                     'admin_id' => $request->admin_id
                 ]);
-                Mail::to($new_user->email)->send(new VerifyEmail($code, now()->addMinutes(60)));
-
+                // Mail::to($new_user->email)->send(new VerifyEmail($code, now()->addMinutes(60)));
+                RegisterEvent::dispatch($new_user);
                 return $this->ReturnSuccessMessage('registerd successfully , code sent to your email');
             } else {
                 return $this->ReturnFailMessage('email already exist');
@@ -135,6 +136,8 @@ class UserController extends Controller
                     'user_id' => $request->user_id,
                     'event_id' => $request->event_id,
                 ]);
+                $user = User::find(Auth::guard('user')->id());
+                $user->update(['events_count' => $user->events_count + 1]);
                 return $this->ReturnSuccessMessage('registerd succ');
             }
         } catch (\Throwable $e) {
@@ -151,7 +154,6 @@ class UserController extends Controller
         try {
 
             $user = User::find(Auth::guard('user')->id());
-            $user->events()->get();
             $events = $user->events()
                 ->select(['events.event_id', 'place'])
                 ->with(['speakers', 'event_sections', 'event_photos'])

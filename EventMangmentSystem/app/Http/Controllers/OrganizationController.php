@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\RegisterEvent;
 use App\Http\Requests\OrganizationRegisterRequest;
 use App\Mail\VerifyEmail;
 use App\Models\Event;
@@ -40,7 +41,8 @@ class OrganizationController extends Controller
                     'organization_type' => $request->organization_type,
                     'admin_id' => $request->admin_id,
                 ]);
-                Mail::to($new_organization->email)->send(new VerifyEmail($code, now()->addMinutes(60)));
+                // Mail::to($new_organization->email)->send(new VerifyEmail($code, now()->addMinutes(60)));
+                RegisterEvent::dispatch($new_organization);
                 return $this->ReturnSuccessMessage('registerd successfully , verification code sent to your email');
             } else {
                 return $this->ReturnFailMessage('email already exist');
@@ -145,10 +147,22 @@ class OrganizationController extends Controller
             $event = Event::with(['event_employees', 'event_photos', 'event_sections', 'event_requirments', 'speakers'])
                 ->where('event_id', $request->event_id)
                 ->first();
-            // $event = Event::whereBelongsTo('organization')
-            //     ->where('event_id', $request->event_id)
-            //     ->first();
             return $this->SuccessWithData('event', $event);
+        } catch (\Throwable $e) {
+
+            return response()->json([
+                'code' => '500',
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+
+
+    public function all_organizations()
+    {
+        try {
+            $organizations = Organization::all();
+            return $this->SuccessWithData('organizations', $organizations);
         } catch (\Throwable $e) {
 
             return response()->json([

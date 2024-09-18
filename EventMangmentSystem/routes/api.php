@@ -49,11 +49,11 @@ Route::prefix('organization')->group(function () {
 
 
 Route::get('all', [EventController::class, 'all_events'])->name('event.all');
+Route::post('search', [EventController::class, 'search_throw_event_type'])->name('event.search');
 Route::group(['prefix' => 'event', 'middleware' => 'auth:organization'], function () {
     Route::post('store', [EventController::class, 'store'])->name('event.store');
     Route::post('update', [EventController::class, 'update'])->name('event.update');
     Route::post('destroy', [EventController::class, 'destroy'])->name('event.destroy');
-    // Route::post('show', [EventController::class, 'get_event'])->name('event.get');
     Route::post('publish', [EventController::class, 'publish_event'])->name('event.publish_event');
 });
 
@@ -126,6 +126,7 @@ Route::group(['prefix' => 'admin',], function () {
     Route::post('register', [AdminController::class, 'admin_register'])->name('admin.register');
     Route::post('login', [AdminController::class, 'admin_login'])->name('admin.login');
     Route::group(['middleware' => 'auth:admin'], function () {
+        Route::get('organizations',  [OrganizationController::class, 'all_organizations'])->name('organization.all');
         Route::post('logout', [AdminController::class, 'admin_logout'])->name('admin.logout');
     });
 });
