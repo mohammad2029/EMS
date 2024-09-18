@@ -18,8 +18,6 @@ class Event extends Model
     protected $primaryKey = 'event_id';
     protected $fillable = [
         'remaining_tickets',
-        'free_events',
-        'events_count',
         'is_published',
         'event_name',
         'event_description',

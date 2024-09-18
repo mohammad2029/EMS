@@ -25,6 +25,9 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     protected $table = 'users';
     protected $primaryKey = 'user_id';
     protected $fillable = [
+        'free_events',
+        'verify_code',
+        'verified',
         'name',
         'email',
         'password',
