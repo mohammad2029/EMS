@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\FreeGiftEvent;
 use App\Events\RegisterEvent;
 use App\Http\Requests\UserLoginRequest;
 use App\Http\Requests\UserRegisterRequest;
@@ -46,7 +47,6 @@ class UserController extends Controller
                     'code' => $code,
                     'admin_id' => $request->admin_id
                 ]);
-                // Mail::to($new_user->email)->send(new VerifyEmail($code, now()->addMinutes(60)));
                 RegisterEvent::dispatch($new_user);
                 return $this->ReturnSuccessMessage('registerd successfully , code sent to your email');
             } else {
@@ -113,13 +113,12 @@ class UserController extends Controller
         try {
 
             $request->validate([
-                'user_id' => 'required',
                 'event_id' => 'required',
             ]);
             $event = Event::where('event_id', $request->event_id)
                 ->select('event_id', 'is_done', 'remaining_tickets')
                 ->first();
-            $user_event = User_Event::where('user_id', $request->user_id)
+            $user_event = User_Event::where('user_id', Auth::guard('user')->id())
                 ->where('event_id', $request->event_id)
                 ->first();
             if ($event->remaining_tickets == 0)
@@ -128,18 +127,24 @@ class UserController extends Controller
             if ($user_event)
                 return $this->ReturnFailMessage('you are already registerd ');
 
-            if ($event->is_done == 0 && $event->remaining_tickets > 0) {
+            if ($event->is_done == 0) {
                 $event->update([
                     'remaining_tickets' => $event->remaining_tickets - 1,
                 ]);
                 User_Event::create([
-                    'user_id' => $request->user_id,
+                    'user_id' => Auth::guard('user')->id(),
                     'event_id' => $request->event_id,
                 ]);
                 $user = User::find(Auth::guard('user')->id());
-                $user->update(['events_count' => $user->events_count + 1]);
+                if ($user->events()->count() >= 2) {
+                    if (($user->events()->count() - (2 * (int)($user->events()->count() / 2))) == 0) {
+                        $user->update(['free_events' => $user->free_events + 1]);
+                        FreeGiftEvent::dispatch($user);
+                        return $this->ReturnSuccessMessage('registerd succ , you got free event check your email for more info');
+                    }
+                }
                 return $this->ReturnSuccessMessage('registerd succ');
-            }
+            } else return $this->ReturnSuccessMessage('event is already done');
         } catch (\Throwable $e) {
             return response()->json([
                 'message' => $e->getMessage(),
@@ -194,7 +199,7 @@ class UserController extends Controller
 
 
 
-
+    public function use_free_gift() {}
 
 
 
