@@ -199,7 +199,27 @@ class UserController extends Controller
 
 
 
-    public function use_free_gift() {}
+    public function use_free_gift(Request $request)
+    {
+        try {
+            $request->validate(['event_id' => 'required']);
+            $user = User::find(Auth::guard('user')->id());
+            if ($user->free_events > 0) {
+                $user->update(['free_events' => $user->free_events - 1]);
+                User_Event::create([
+                    'event_id' => $request->event_id,
+                    'user_id' => Auth::guard('user')->id()
+                ]);
+                return $this->ReturnSuccessMessage('you used your gift succ');
+            }
+            return $this->ReturnSuccessMessage('you dont have a free gift');
+        } catch (\Throwable $e) {
+            return response()->json([
+                'code' => '500',
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
 
 
 
