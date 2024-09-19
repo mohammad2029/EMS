@@ -43,16 +43,16 @@ class Organization extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(Event::class);
     }
-    public function organization_sections(): HasMany
+    public function OrganizationSections(): HasMany
     {
-        return $this->hasMany(Organization_section::class);
+        return $this->hasMany(Organization_section::class, 'organization_id');
     }
 
 
 
-    public function organization_speaker(): HasMany
+    public function OrganizationSpeaker(): HasMany
     {
-        return $this->hasMany(Organization_speaker::class);
+        return $this->hasMany(Organization_speaker::class, 'organization_id');
     }
 
 

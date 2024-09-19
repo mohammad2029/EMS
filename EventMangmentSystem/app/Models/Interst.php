@@ -10,19 +10,19 @@ use Illuminate\Database\Eloquent\Model;
 class Interst extends Model
 {
     use HasFactory;
-    protected $fillable =[
+    protected $primaryKey = 'interst_id';
+    protected $fillable = [
         'name',
-'user_id',
+        'user_id',
     ];
 
-/**
- * Get the user that owns the Interst
- *
- * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
- */
-public function user(): BelongsTo
-{
-    return $this->belongsTo(User::class);
-}
-
+    /**
+     * Get the user that owns the Interst
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

@@ -22,10 +22,10 @@ class EventController extends Controller
     public function all_events()
     {
         $events = Event::with([
-            'event_photos' => function ($q) {
+            'EventPhotos' => function ($q) {
                 $q->select('event_photo_id', 'event_id', 'photo_path');
             },
-            'event_employees' => function ($q) {
+            'EventEmployees' => function ($q) {
                 $q->select('event_employee_id', 'event_id', 'work');
             },
             'speakers' => function ($q) {

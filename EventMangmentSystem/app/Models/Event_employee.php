@@ -11,8 +11,8 @@ use Illuminate\Database\Eloquent\Model;
 class Event_employee extends Model
 {
     use HasFactory;
-    protected $primaryKey='event_employee_id';
-    protected $fillable =[
+    protected $primaryKey = 'event_employee_id';
+    protected $fillable = [
         'birth_date',
         'work',
         'event_id',
@@ -28,11 +28,13 @@ class Event_employee extends Model
         return $this->belongsTo(Event::class);
     }
 
-    public function setBirthDateAttribute($value){
-        $this->attributes['birth_date']=Carbon::createFromFormat('d-m-Y',$value)->format('Y-m-d');
+    public function setBirthDateAttribute($value)
+    {
+        $this->attributes['birth_date'] = Carbon::createFromFormat('d-m-Y', $value)->format('Y-m-d');
     }
 
-    public function getBirthDateAttribute(){
+    public function getBirthDateAttribute()
+    {
         return Carbon::createFromFormat('Y-m-d', $this->attributes['birth_date'])->format('d-m-Y');
     }
 }

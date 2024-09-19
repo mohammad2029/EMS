@@ -49,14 +49,14 @@ class Event extends Model
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
 
-    public function user_events(): HasMany
+    public function UserEvents(): HasMany
     {
         return $this->hasMany(User_Event::class, 'event_id');
     }
 
 
 
-    public function event_employees(): HasMany
+    public function EventEmployees(): HasMany
     {
         return $this->hasMany(Event_employee::class, 'event_id');
     }
@@ -64,20 +64,20 @@ class Event extends Model
 
 
 
-    public function event_photos(): HasMany
+    public function EventPhotos(): HasMany
     {
         return $this->hasMany(Event_photo::class, 'event_id');
     }
 
 
-    public function event_sections(): HasMany
+    public function EventSections(): HasMany
     {
         return $this->hasMany(User_Event::class, 'event_id');
     }
 
 
 
-    public function event_requirments(): HasMany
+    public function EventRequirments(): HasMany
     {
         return $this->hasMany(Event_requirment::class, 'event_id');
     }

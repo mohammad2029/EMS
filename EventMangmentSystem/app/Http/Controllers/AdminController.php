@@ -8,7 +8,7 @@ use App\Models\Admin;
 use Illuminate\Http\Request;
 use App\Traits\HttpResponsesTrait;
 use Exception;
-use Illuminate\Support\Facades\Auth ;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
@@ -21,12 +21,10 @@ class AdminController extends Controller
         try {
             $request->validated($request->all());
             $admin = Admin::where('email', $request->email)->first();
-            if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password])) {
-                {
-                   $admin->token =  Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password]);
-                    return $this->SuccessWithData('admin',$admin,'loged in successfully');
+            if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password])) { {
+                    $admin->token =  Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password]);
+                    return $this->SuccessWithData('admin', $admin, 'loged in successfully');
                 }
-
             } else {
                 return $this->ReturnFailMessage('email and password does not match');
             }
@@ -34,7 +32,7 @@ class AdminController extends Controller
 
             return response()->json([
                 'code' => '500',
-                'error'=>$e->getMessage()
+                'error' => $e->getMessage()
             ]);
         }
     }
@@ -42,47 +40,42 @@ class AdminController extends Controller
 
 
 
-
-public function admin_register(AdminRegisterRequest $request){
-
-    $admin=Admin::where('email',$request->email)->first();
-    if(!$admin)
+    public function admin_register(AdminRegisterRequest $request)
     {
 
-        $request->validated($request->all());
-        Admin::create([
-            'email'=>$request->email,
-            'password'=>Hash::make($request->password)
-        ]);
-    return $this->ReturnSuccessMessage('admin registerd successfully');
+        $admin = Admin::where('email', $request->email)->first();
+        if (!$admin) {
 
-    }
-
-    return $this->ReturnFailMessage('you are already registered',200);
-}
-
-
-
-
-
-
-public function admin_logout(Request $request){
-    try{
-        if($request->header('Auth-token')){
-            return  $this->ReturnSuccessMessage('loged out successfully');
-
+            $request->validated($request->all());
+            Admin::create([
+                'email' => $request->email,
+                'password' => Hash::make($request->password)
+            ]);
+            return $this->ReturnSuccessMessage('admin registerd successfully');
         }
-        return $this->ReturnFailMessage('you are not authorized',403);
 
+        return $this->ReturnFailMessage('you are already registered', 200);
     }
-    catch (\Throwable $e) {
 
-        return response()->json([
-            'code' => '500',
-            'error'=>$e->getMessage(),
-        ]);
+
+
+
+
+    public function admin_logout(Request $request)
+    {
+        try {
+            if ($request->header('Auth-token')) {
+                return  $this->ReturnSuccessMessage('loged out successfully');
+            }
+            return $this->ReturnFailMessage('you are not authorized', 403);
+        } catch (\Throwable $e) {
+
+            return response()->json([
+                'code' => '500',
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
-}
 
     public function index()
     {
@@ -136,6 +129,4 @@ public function admin_logout(Request $request){
     {
         //
     }
-
-
 }

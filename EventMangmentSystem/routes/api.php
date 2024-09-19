@@ -124,9 +124,9 @@ Route::group(['prefix' => 'speaker', 'middleware' => 'auth:organization'], funct
 
 Route::group(['prefix' => 'admin',], function () {
     Route::post('register', [AdminController::class, 'admin_register'])->name('admin.register');
+    Route::get('organizations',  [OrganizationController::class, 'all_organizations'])->name('organization.all');
     Route::post('login', [AdminController::class, 'admin_login'])->name('admin.login');
     Route::group(['middleware' => 'auth:admin'], function () {
-        Route::get('organizations',  [OrganizationController::class, 'all_organizations'])->name('organization.all');
         Route::post('logout', [AdminController::class, 'admin_logout'])->name('admin.logout');
     });
 });

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Event_section;
 use App\Traits\HttpResponsesTrait;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class EventSectionController extends Controller
 {
@@ -31,7 +32,7 @@ class EventSectionController extends Controller
             $request->validate([
                 'description' => ['required', 'string'],
                 'start_time' => ['required'],
-                'day_time' => ['required'],
+                'day_time' => ['required', Rule::in(['AM', 'BM'])],
                 'end_time' => ['required'],
                 'event_id' => ['required'],
             ]);

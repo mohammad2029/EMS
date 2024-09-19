@@ -7,6 +7,7 @@ use App\Http\Requests\OrganizationRegisterRequest;
 use App\Mail\VerifyEmail;
 use App\Models\Event;
 use App\Models\Organization;
+use App\Models\Speaker;
 use Illuminate\Http\Request;
 use App\Traits\HttpResponsesTrait;
 use Illuminate\Support\Facades\Auth;
@@ -144,7 +145,7 @@ class OrganizationController extends Controller
     {
         try {
             $request->validate(['event_id' => 'required']);
-            $event = Event::with(['event_employees', 'event_photos', 'event_sections', 'event_requirments', 'speakers'])
+            $event = Event::with(['EventEmployees', 'EventPhotos', 'EventSections', 'EventRequirments', 'speakers'])
                 ->where('event_id', $request->event_id)
                 ->first();
             return $this->SuccessWithData('event', $event);
@@ -161,7 +162,7 @@ class OrganizationController extends Controller
     public function all_organizations()
     {
         try {
-            $organizations = Organization::all();
+            $organizations = Organization::with(['OrganizationSections', 'OrganizationSpeaker']);
             return $this->SuccessWithData('organizations', $organizations);
         } catch (\Throwable $e) {
 

@@ -22,13 +22,13 @@ class OrganizationRegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email'=>['required','string',],
-'password'=>['required','string','min:8'],
-          'name'=>['required','string'],
-'logo'=>['required','image','mimes:png,jpg'],
-'organization_description'=>['required','string'],
-'organization_type'=>['required','string'],
-'admin_id'=>['nullable'],
+            'email' => ['required', 'string',],
+            'password' => ['required', 'string', 'min:8'],
+            'name' => ['required', 'string'],
+            'logo' => ['required', 'image', 'mimes:png,jpg'],
+            'organization_description' => ['required', 'string'],
+            'organization_type' => ['required', 'string'],
+            'admin_id' => ['nullable'],
         ];
     }
 }

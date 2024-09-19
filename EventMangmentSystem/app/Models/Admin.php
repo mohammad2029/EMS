@@ -14,58 +14,51 @@ class Admin extends Authenticatable implements JWTSubject
 
     use HasFactory;
     protected $primaryKey = 'admin_id';
-    protected $table='admins';
-    protected $guard='admin';
-    protected $fillable =[
-        'admin_id',
-'email',
-'password'];
+    protected $table = 'admins';
+    protected $guard = 'admin';
+    protected $fillable = [
+        'email',
+        'password'
+    ];
 
 
 
 
 
-public function getJWTIdentifier()
-{
-    return $this->getKey();
-}
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
 
-/**
- * Return a key value array, containing any custom claims to be added to the JWT.
- *
- * @return array
- */
-public function getJWTCustomClaims()
-{
-    return [];
-}
-
-
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
+     */
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
 
 
 
 
 
 
-public function users(): HasMany
+
+
+    public function users(): HasMany
     {
         return $this->hasMany(User::class);
     }
 
-public function events(): HasMany
+    public function events(): HasMany
     {
         return $this->hasMany(Event::class);
     }
 
-public function organizations(): HasMany
+    public function organizations(): HasMany
     {
         return $this->hasMany(Organization::class);
     }
-
-
-
-
 }
-
-
-

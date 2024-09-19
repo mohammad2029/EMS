@@ -30,15 +30,15 @@ class Speaker extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function speaker_experience(): HasMany
+    public function SpeakerExperience(): HasMany
     {
-        return $this->hasMany(Speaker_experience::class);
+        return $this->hasMany(Speaker_experience::class, 'speaker_id');
     }
 
 
 
-    public function organization_speakers(): HasMany
+    public function OrganizationSpeakers(): HasMany
     {
-        return $this->hasMany(Organization_speaker::class);
+        return $this->hasMany(Organization_speaker::class, 'speaker_id');
     }
 }

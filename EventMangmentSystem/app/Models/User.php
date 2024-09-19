@@ -51,7 +51,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
      */
     public function intersts(): HasMany
     {
-        return $this->hasMany(Interst::class);
+        return $this->hasMany(Interst::class, 'user_id');
     }
 
 
