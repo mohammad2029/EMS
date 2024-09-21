@@ -6,6 +6,7 @@ use App\Http\Requests\StoreEventRequest;
 use App\Http\Requests\UpdateEventRequest;
 use App\Models\Event;
 use App\Models\Event_requirment;
+use App\Models\User_Event;
 use App\Traits\HttpResponsesTrait;
 use Carbon\Carbon;
 use Illuminate\Contracts\Cache\Store;
@@ -21,6 +22,9 @@ class EventController extends Controller
      */
     public function all_events()
     {
+        // $events = Event::find(6);
+        // $event_user = User_Event::where('event_id', 2)->get();
+
         $events = Event::with([
             'EventPhotos' => function ($q) {
                 $q->select('event_photo_id', 'event_id', 'photo_path');
@@ -30,13 +34,27 @@ class EventController extends Controller
             },
             'speakers' => function ($q) {
                 $q->select('speaker_id', 'event_id', 'name');
-            }
+            },
         ])
+            ->withAvg('users as rate_of_event', 'event_users.rate')
             ->where('is_published', 1)
             ->get();
         return $this->SuccessWithData('events', $events, 'events returned successfully');
     }
 
+    // $e1 = Event::find(4);
+    // // foreach ($events as $event) {
+    // //    $event_rate= User_Event::where('event_id',$event->event_id);
+    // //     // $event->event_rate=
+    // // }
+    // // $events->event_rate = User_Event::where('event_id', $events->event_id)
+    // //     // ->select('rate')
+    // //     ->sum('rate');
+    // // // ->get();
+    // $events->users()->wherePivot('event_id', $events->event_id)->get();
+    // return response()->json([
+    //     'data' => $e1->users()->get()
+    // ]);
 
     public function store(StoreEventRequest $request)
     {

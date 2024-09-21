@@ -21,11 +21,8 @@ return new class extends Migration
             $table->string('countrey');
             $table->string('state');
             $table->timestamp('email_verified_at')->nullable();
-            $table->unsignedBigInteger('admin_id');
-            $table->foreign('admin_id')->references('admin_id')->on('admins')->onDelete('cascade');
             $table->rememberToken();
             $table->timestamps();
-
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

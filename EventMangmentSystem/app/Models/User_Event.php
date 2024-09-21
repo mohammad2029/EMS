@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class User_Event extends Model
 {
     use HasFactory;
-    protected $table = 'user_events';
+    protected $table = 'event_users';
     protected $primaryKey = 'user_event_id';
     protected $fillable = [
         'user_id',

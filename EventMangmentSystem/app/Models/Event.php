@@ -93,7 +93,7 @@ class Event extends Model
 
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(Event::class, 'user_events', 'user_id', 'event_id');
+        return $this->belongsToMany(Event::class, 'event_users', 'event_id', 'user_id');
     }
 
 
@@ -107,14 +107,14 @@ class Event extends Model
     }
 
 
-    public function setStartDateAttribute($value)
-    {
-        $this->attributes['start_date'] = Carbon::createFromFormat('d-m-Y', $value)->format('Y-m-d');
-    }
-    public function setEndDateAttribute($value)
-    {
-        $this->attributes['end_date'] = Carbon::createFromFormat('d-m-Y', $value)->format('Y-m-d');
-    }
+    // public function setStartDateAttribute($value)
+    // {
+    //     $this->attributes['start_date'] = Carbon::createFromFormat('d-m-Y', $value)->format('Y-m-d');
+    // }
+    // public function setEndDateAttribute($value)
+    // {
+    //     $this->attributes['end_date'] = Carbon::createFromFormat('d-m-Y', $value)->format('Y-m-d');
+    // }
 
     public function getStartDateAttribute()
     {

@@ -27,10 +27,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         User::factory(5)->has(Interst::factory(2))->create();
-        Organization::factory(5)
-            ->has(Organization_section::factory(4))
-            ->has(Organization_speaker::factory(4))
-            ->create();
+        Organization::factory(4)->create();
         Event::factory(5)
             ->has(Event_employee::factory(4))
             ->has(Event_photo::factory(3))
@@ -40,6 +37,10 @@ class DatabaseSeeder extends Seeder
                 Speaker::factory(3)
                     ->has(Speaker_experience::factory(3))
             )
+            ->create();
+        Organization::factory(5)
+            ->has(Organization_section::factory(4))
+            ->has(Organization_speaker::factory(4))
             ->create();
         Admin::factory(4)->create();
         User_Event::factory(20)->create();

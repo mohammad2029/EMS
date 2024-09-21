@@ -147,6 +147,7 @@ Route::group(['prefix' => 'user',], function () {
     Route::group(['middleware' => 'auth:user'], function () {
         Route::post('logout', [UserController::class, 'user_logout'])->name('user.logout');
         Route::post('event_register', [UserController::class, 'user_event_register'])->name('user.event_register');
+        Route::post('rate', [UserController::class, 'user_rate'])->name('user.rate');
         Route::post('gift', [UserController::class, 'use_free_gift'])->name('user.use_free_gift');
         Route::post('event_show', [UserController::class, 'user_event_show'])->name('user_event.show');
         Route::get('registerd_event', [UserController::class, 'show_registerd_events'])->name('user.show_registerd_events');

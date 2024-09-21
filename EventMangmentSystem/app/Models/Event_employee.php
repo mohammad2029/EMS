@@ -28,10 +28,10 @@ class Event_employee extends Model
         return $this->belongsTo(Event::class);
     }
 
-    public function setBirthDateAttribute($value)
-    {
-        $this->attributes['birth_date'] = Carbon::createFromFormat('d-m-Y', $value)->format('Y-m-d');
-    }
+    // public function setBirthDateAttribute($value)
+    // {
+    //     $this->attributes['birth_date'] = Carbon::createFromFormat('d-m-Y', $value)->format('Y-m-d');
+    // }
 
     public function getBirthDateAttribute()
     {

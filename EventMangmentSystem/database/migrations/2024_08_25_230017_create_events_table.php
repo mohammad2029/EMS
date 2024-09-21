@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('state');
             $table->string('street');
             $table->string('place');
-            $table->enum('event_type',['medical','cultural','sport','technical','scientific','artistic','entertaining','commercial']);
+            $table->enum('event_type', ['medical', 'cultural', 'sport', 'technical', 'scientific', 'artistic', 'entertaining', 'commercial']);
             $table->date('start_date');
             $table->date('end_date');
             $table->integer('tickets_number');
@@ -27,8 +27,6 @@ return new class extends Migration
             $table->boolean('is_done')->default(0);
             $table->unsignedBigInteger('organization_id');
             $table->foreign('organization_id')->references('organization_id')->on('organizations')->onDelete('cascade');
-            $table->unsignedBigInteger('admin_id');
-            $table->foreign('admin_id')->references('admin_id')->on('admins')->onDelete('cascade');
 
             $table->timestamps();
         });

@@ -17,8 +17,6 @@ return new class extends Migration
             $table->string('logo');
             $table->string('organization_description');
             $table->string('organization_type');
-            $table->unsignedBigInteger('admin_id');
-            $table->foreign('admin_id')->references('admin_id')->on('admins')->onDelete('cascade');
             $table->timestamps();
         });
     }

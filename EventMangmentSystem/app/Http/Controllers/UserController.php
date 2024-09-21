@@ -222,7 +222,25 @@ class UserController extends Controller
     }
 
 
-
+    public function user_rate(Request $request)
+    {
+        try {
+            $request->validate([
+                'event_id' => 'required',
+                'rate' => ['required', 'max:5']
+            ]);
+            $user_event = User_Event::where('event_id', $request->event_id)
+                ->where('user_id', Auth::guard('user')->id())
+                ->first();
+            $user_event->update(['rate' => $request->rate]);
+            return $this->ReturnSuccessMessage('thank you for your opinion');
+        } catch (\Throwable $e) {
+            return response()->json([
+                'code' => '500',
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
 
 
 
